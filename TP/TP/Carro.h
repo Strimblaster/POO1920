@@ -31,11 +31,10 @@ public:
 	void travar();
 	void mover();
 	void entrarPiloto(Piloto* p);
+	string toString();
 
 		
 };
-
-int Carro::contador = 0;
 
 
 #endif

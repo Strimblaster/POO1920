@@ -7,12 +7,13 @@
 using namespace std;
 class Piloto
 {
-	const string nome;
+	string nome;
 
 
 public:
 	Piloto(string);
 
+	string getNome() const;
 };
 
 #endif
