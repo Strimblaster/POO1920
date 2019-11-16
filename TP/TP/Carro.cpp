@@ -43,8 +43,10 @@ void Carro::mover() {
 }
 
 void Carro::entrarPiloto(Piloto* p) {
-	if(estado != parado && piloto != nullptr && estado != danificado)
-		piloto = p;
+	if (estado != parado) throw string("Erro: O carro tem que estar parado");
+	if(piloto != nullptr) throw string("Erro: O carro ja tem um condutor");
+	if(estado == danificado) throw string("Erro: O carro esta danificado");
+	piloto = p;
 }
 
 string Carro::toString() {
@@ -58,6 +60,26 @@ string Carro::toString() {
 	return o.str();
 }
 
+
+void Carro::sairPiloto()
+{
+	if (estado == movimento)
+		throw string("O carro está em movimento");
+	piloto = nullptr;
+}
+
+
+
+
+const char Carro::getid()
+{
+	return id;
+}
+
 int Carro::contador = 0;
+
+Piloto* Carro::getPiloto() {
+	return piloto;
+}
 
 

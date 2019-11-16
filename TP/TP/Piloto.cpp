@@ -8,3 +8,9 @@ Piloto::Piloto(string nome)
 string Piloto::getNome() const {
 	return nome;
 }
+
+string Piloto::toString()
+{
+	return nome;
+}
+

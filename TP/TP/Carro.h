@@ -7,17 +7,10 @@
 using namespace std;
 
 class Carro {
-	enum estado {
-		movimento,
-		parado,
-		danificado
-	};
-
 	static int contador;
 
 	char id;
 	string marca,modelo;
-	estado estado;
 	int velocidade;
 	float energia;
 	Piloto* piloto;
@@ -26,14 +19,23 @@ class Carro {
 	const int capacidadeMax;
 	const int velocidadeMax;
 public:
+	enum Estado {
+		movimento,
+		parado,
+		danificado
+	};
+	Estado estado;
 	Carro(string marca, string modelo, int capacidadeMax, int energiaInicial, int velocidadeMax);
 	void acelerar();
 	void travar();
 	void mover();
 	void entrarPiloto(Piloto* p);
 	string toString();
+	const char getid();
+	Piloto* getPiloto();
+	void sairPiloto();
+	
 
-		
 };
 
 

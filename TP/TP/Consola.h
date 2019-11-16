@@ -12,6 +12,7 @@ class Consola
 {
 	DGV* dgv;
 	bool nextCommand();
+	void desenharPista(int comprimento, int largura);
 public:
 	Consola(DGV*);
 	void start();

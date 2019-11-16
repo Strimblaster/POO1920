@@ -14,6 +14,7 @@ public:
 	Piloto(string);
 
 	string getNome() const;
+	string toString();
 };
 
 #endif
