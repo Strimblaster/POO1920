@@ -49,7 +49,7 @@ void DGV::entraNoCarro(vector<string> comando)
 	for (Piloto* p : pilotos)
 		if (p->getNome() == comando.at(2))
 			piloto = p;
-	if (piloto == nullptr) throw string("O piloto não existe");
+	if (piloto == nullptr) throw string("O piloto nao existe");
 
 	//Verifica se ja esta em algum carro
 	for (Carro* c : carros) {
@@ -142,14 +142,14 @@ int DGV::getLargura()
 {
 	if (campeonato == nullptr)
 		throw string("erro");
-	campeonato->getLargura();
+	return campeonato->getLargura();
 }
 
 int DGV::getComprimento()
 {
 	if (campeonato == nullptr)
 		throw string("erro");
-	campeonato->getComprimento();
+	return campeonato->getComprimento();
 }
 
 string DGV::listaAutodromos()
@@ -182,4 +182,9 @@ string DGV::getGaragem()
 map<Carro*, int> DGV::getPosicoes()
 {
 	return campeonato->getPosicoes();
+}
+
+bool DGV::passaTempo()
+{
+	return campeonato->passaTempo();
 }

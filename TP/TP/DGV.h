@@ -36,6 +36,7 @@ public:
 	void scoreboard();
 	string getGaragem();
 	map<Carro*, int> getPosicoes();
+	bool passaTempo();
 
 };
 #endif

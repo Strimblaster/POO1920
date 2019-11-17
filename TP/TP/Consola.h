@@ -12,12 +12,13 @@ using namespace std;
 class Consola
 {
 	DGV* dgv;
+	int modo;
 	bool nextCommand();
 	void desenharPista(int comprimento, int largura);
 public:
 	Consola(DGV*);
 	void start();
-
+	bool passatempo(vector<string>);
 };
 
 #endif

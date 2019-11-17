@@ -82,3 +82,38 @@ map<Carro*, int> Autodromo::getPosicoes()
 {
 	return posicoes;
 }
+
+bool Autodromo::passaTempo()
+{
+	for (pair<Carro*, int> p : posicoes) {
+		int i = p.first->mover();
+		posicoes[p.first] += i;
+	}
+	if (gameEnded()) return true;
+	return false;
+}
+
+bool Autodromo::gameEnded()
+{
+	for (pair<Carro*, int> p : posicoes)
+		if (p.second >= comprimento)
+			return true;
+	return false;
+}
+
+vector<Piloto*> Autodromo::getTop3()
+{
+	vector<Piloto*> p;
+	map<Carro*, int> cpy = posicoes;
+	pair<Carro*, int> maior(nullptr, -1);
+	for (int i = 0; i < 3; i++) {
+		for (pair<Carro*, int> p : cpy)
+			if (maior.second < p.second)
+				maior = p;
+		if (maior.first == nullptr) return p;
+		p.push_back(maior.first->getPiloto());
+		cpy.erase(maior.first);
+		maior = pair<Carro*, int>(nullptr, -1);
+	}
+	return p;
+}

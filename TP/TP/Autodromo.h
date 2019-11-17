@@ -23,6 +23,9 @@ public:
 	void autodromoController(Carro*);
 	string getGaragem();
 	map<Carro*, int> getPosicoes();
+	bool passaTempo();
+	bool gameEnded();
+	vector<Piloto*> getTop3();
 	
 
 };

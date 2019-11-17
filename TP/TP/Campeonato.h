@@ -23,7 +23,7 @@ public:
 	map<Carro*, int> getPosicoes();
 	int getLargura();
 	int getComprimento();
-
+	bool passaTempo();
 };
 
 

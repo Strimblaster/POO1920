@@ -78,3 +78,17 @@ int Campeonato::getComprimento()
 {
 	return pistas->at(corridaAtual)->getComprimento();
 }
+
+bool Campeonato::passaTempo()
+{
+	bool terminou = pistas->at(corridaAtual)->passaTempo();
+	int k = 0;
+	if (terminou)
+		for (Piloto* p : pistas->at(corridaAtual)->getTop3())
+			for (pair<Piloto*, int> par : pontuacao)
+				if (p == par.first) {
+					par.second += 10 / (k + 1);
+					k++;
+				}
+	return terminou;
+}

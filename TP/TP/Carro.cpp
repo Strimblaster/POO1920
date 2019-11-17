@@ -33,13 +33,14 @@ void Carro::travar() {
 	velocidade--;
 }
 
-void Carro::mover() {
-	if (estado == danificado || estado == parado || piloto == nullptr) return;
+int Carro::mover() {
+	//if (estado == danificado || estado == parado || piloto == nullptr) return 0;
 	if (energia == 0)
 		travar();
-	//else
-		//mexer();
+	else
+		acelerar();
 
+	return velocidade;
 }
 
 void Carro::entrarPiloto(Piloto* p) {
