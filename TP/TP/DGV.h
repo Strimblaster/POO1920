@@ -21,6 +21,7 @@ class DGV
 	void addAutodromo(Autodromo*);
 	string listaPilotos();
 	string listaCarros();
+	string listaAutodromos();
 public:
 
 	DGV();
@@ -29,5 +30,12 @@ public:
 	void entraNoCarro(vector<string>);
 	void saiDoCarro(vector<string>);
 	void comandoCampeonato(vector<string> comando);
+	int getLargura();
+	int getComprimento();
+	void infoCampeonato();
+	void scoreboard();
+	string getGaragem();
+	map<Carro*, int> getPosicoes();
+
 };
 #endif

@@ -64,7 +64,7 @@ string Carro::toString() {
 void Carro::sairPiloto()
 {
 	if (estado == movimento)
-		throw string("O carro está em movimento");
+		throw string("O carro esta em movimento");
 	piloto = nullptr;
 }
 

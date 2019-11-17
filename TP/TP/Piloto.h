@@ -3,6 +3,7 @@
 #define Piloto_H
 
 #include <string>
+#include <vector>
 
 using namespace std;
 class Piloto
@@ -11,7 +12,7 @@ class Piloto
 
 
 public:
-	Piloto(string);
+	Piloto(string, vector<Piloto*>);
 
 	string getNome() const;
 	string toString();

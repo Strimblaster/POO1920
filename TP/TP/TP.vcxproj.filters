@@ -24,15 +24,6 @@
     <ClCompile Include="Autodromo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Corrida.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Pista.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Garagem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DGV.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -57,15 +48,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Autodromo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Corrida.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Pista.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Garagem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DGV.h">

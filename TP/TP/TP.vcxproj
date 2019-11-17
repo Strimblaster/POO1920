@@ -156,11 +156,8 @@
     <ClCompile Include="Carro.cpp" />
     <ClCompile Include="Consola.cpp" />
     <ClCompile Include="ConsolaUtils.cpp" />
-    <ClCompile Include="Corrida.cpp" />
     <ClCompile Include="DGV.cpp" />
-    <ClCompile Include="Garagem.cpp" />
     <ClCompile Include="Piloto.cpp" />
-    <ClCompile Include="Pista.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,11 +166,8 @@
     <ClInclude Include="Carro.h" />
     <ClInclude Include="Consola.h" />
     <ClInclude Include="ConsolaUtils.h" />
-    <ClInclude Include="Corrida.h" />
     <ClInclude Include="DGV.h" />
-    <ClInclude Include="Garagem.h" />
     <ClInclude Include="Piloto.h" />
-    <ClInclude Include="Pista.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

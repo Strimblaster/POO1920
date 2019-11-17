@@ -2,17 +2,18 @@
 #include <iostream>
 
 DGV::DGV() {
-	pilotos.push_back(new Piloto("ConaA"));
-	pilotos.push_back(new Piloto("ConaB"));
-	pilotos.push_back(new Piloto("ConaC"));
+	pilotos.push_back(new Piloto("PA", pilotos));
+	pilotos.push_back(new Piloto("PB", pilotos));
+	pilotos.push_back(new Piloto("PC", pilotos));
 
 	carros.push_back(new Carro("Mercedes", "Corno", 6000, 4000, 100));
 	carros.push_back(new Carro("Mercedes", "Corno", 6000, 4000, 100));
 	carros.push_back(new Carro("Mercedes", "Corno", 6000, 4000, 100));
 
-	autodromos.push_back(new Autodromo("Auto1", 100, 100));
-	autodromos.push_back(new Autodromo("Auto2", 100, 100));
-	autodromos.push_back(new Autodromo("Auto3", 100, 100));
+	autodromos.push_back(new Autodromo("A1", 5, 100, autodromos));
+	autodromos.push_back(new Autodromo("A2", 5, 100, autodromos));
+	autodromos.push_back(new Autodromo("A3", 5, 100, autodromos));
+	campeonato = nullptr;
 	//carros.push_back(new Carro("Mercedes", "Corno", 6000, 4000, 100));
 }
 
@@ -28,7 +29,7 @@ void DGV::cria(vector<string> comando) {
 	}
 	else if (comando.at(1) == "p") {
 		if (comando.size() < 4) throw string("Usar: cria p nome");
-		addPiloto(new Piloto(comando.at(2)));
+		addPiloto(new Piloto(comando.at(2), pilotos));
 	}
 	else if (comando.at(1) == "a") {
 		if (comando.size() < 4) throw string("Usar: cria a");
@@ -43,17 +44,23 @@ void DGV::entraNoCarro(vector<string> comando)
 {
 	if (comando.size() != 4 || comando.at(1).size() != 1) throw string("Usar: entranocarro IDCarro NomePiloto");
 	Piloto* piloto = nullptr;
+
+	//Verifica se o piloto existe
 	for (Piloto* p : pilotos)
 		if (p->getNome() == comando.at(2))
 			piloto = p;
 	if (piloto == nullptr) throw string("O piloto não existe");
 
+	//Verifica se ja esta em algum carro
 	for (Carro* c : carros) {
 		if (c->getPiloto() == piloto)
-			c->sairPiloto();
+			throw string("O piloto ja esta num carro");
+	}
+
+	//Procura o carro e mete la o piloto
+	for (Carro* c : carros) {
 		if (c->getid() == comando.at(1)[0]) {
 			c->entrarPiloto(piloto);
-			cout << "cona" << endl;
 		}
 			
 	}
@@ -90,7 +97,7 @@ string DGV::listaPilotos()
 string DGV::lista()
 {
 	ostringstream oss;
-	oss << listaPilotos() << endl << listaCarros();
+	oss << listaPilotos() << endl << listaCarros() << endl << listaAutodromos();
 	return oss.str();
 }
 
@@ -131,3 +138,48 @@ void DGV::comandoCampeonato(vector<string> comando) {
 	this->campeonato = new Campeonato(pistas, pilotos, carros);
 }
 
+int DGV::getLargura()
+{
+	if (campeonato == nullptr)
+		throw string("erro");
+	campeonato->getLargura();
+}
+
+int DGV::getComprimento()
+{
+	if (campeonato == nullptr)
+		throw string("erro");
+	campeonato->getComprimento();
+}
+
+string DGV::listaAutodromos()
+{
+	ostringstream oss;
+	oss << "--- Lista de Autodromos ---" << endl;
+	for (Autodromo* a : autodromos) {
+		oss << a->toString() << endl;
+	}
+	return oss.str();
+}
+
+void DGV::infoCampeonato()
+{
+	if (campeonato != nullptr)
+		cout << campeonato->infoCampeonato();
+}
+
+void DGV::scoreboard()
+{
+	if (campeonato != nullptr)
+		cout << campeonato->scoreboard();
+}
+
+string DGV::getGaragem()
+{
+	return campeonato->getGaragem();
+}
+
+map<Carro*, int> DGV::getPosicoes()
+{
+	return campeonato->getPosicoes();
+}

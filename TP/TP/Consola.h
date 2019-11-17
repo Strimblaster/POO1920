@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <map>
 #include "DGV.h"
 #include <exception>
 

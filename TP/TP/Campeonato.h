@@ -10,12 +10,19 @@ class Campeonato
 	vector<Autodromo*>* pistas;
 	map<Piloto*, int> pontuacao;
 	vector<Carro*> carros;
+	int corridaAtual;
 
 public:
 	Campeonato(vector<Autodromo*>, vector<Piloto*>, vector<Carro*>);
 
 	string scoreboard();
 	void proximaCorrida();
+	string infoCampeonato();
+
+	string getGaragem();
+	map<Carro*, int> getPosicoes();
+	int getLargura();
+	int getComprimento();
 
 };
 

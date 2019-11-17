@@ -15,44 +15,57 @@ void Consola::start() {
 }
 
 void Consola::desenharPista(int comprimento, int largura) {
-
 	int xlinha1 = 7;
 	int xlinha2 = xlinha1 + (comprimento * 10);
 	int ylinha1 = 4;
 	int ylinha2 = ylinha1 + (largura + 1);
 
-	ConsolaUtils::gotoxy(xlinha1-3, ylinha1-1);
+	ConsolaUtils::gotoxy(xlinha1-3, ylinha1-2);
 	cout << "Partida";
-	ConsolaUtils::gotoxy(xlinha1 - 3 + comprimento, ylinha1 - 1);
+	ConsolaUtils::gotoxy(xlinha1 - 3 + comprimento, ylinha1 - 2);
 
 	cout << "Chegada";
 	
-	ConsolaUtils::gotoxy(xlinha1, ylinha1);
+	ConsolaUtils::gotoxy(xlinha1-1, ylinha1);
 	ostringstream oss;
-	for (int i = 0; i < comprimento; i++)
+	ConsolaUtils::setTextColor(ConsolaUtils::CINZENTO);
+	for (int i = 0; i < comprimento+2; i++)
 	{
-		oss << "_";
+		oss << '\xDB';
 	}
 	cout << oss.str();
-	ConsolaUtils::gotoxy(xlinha1, ylinha2);
+	ConsolaUtils::gotoxy(xlinha1-1, ylinha2);
 	cout << oss.str();
-
+	ConsolaUtils::setTextColor(ConsolaUtils::PRETO);
 	
-	for (int i = ylinha1+1 ; i <= ylinha2; i++)
+	for (int i = ylinha1+1 ; i < ylinha2; i++)
 	{
 		ConsolaUtils::gotoxy(xlinha1 + comprimento, i );
 		if( i%2 == 0)ConsolaUtils::setTextColor(ConsolaUtils::AZUL);
-		else ConsolaUtils::setTextColor(ConsolaUtils::PRETO);
-		cout << "|";
+		else ConsolaUtils::setTextColor(ConsolaUtils::VERMELHO);
+		cout << '\xBA';
 	}
 	ConsolaUtils::setTextColor(ConsolaUtils::PRETO);
-	for (int i = ylinha1 + 1, j = 0; i <= ylinha2; i++,j++)
+	for (int i = ylinha1 + 1, j = 0; i < ylinha2; i++,j++)
 	{
-		ConsolaUtils::gotoxy(xlinha1-2, i);
-		char c = 'A' + j;
-		cout << c << '|';
+		ConsolaUtils::gotoxy(xlinha1-1, i);
+		cout << '|';
 	}
+
+	map<Carro*, int> posicoes = dgv->getPosicoes();
+	int k = 0;
+	for (pair<Carro*, int> p : posicoes) {
+
+		ConsolaUtils::gotoxy(xlinha1 - 1 + p.second, ylinha1 + 1 + k);
+		cout << p.first->getid();
+		k++;
+	}
+
+
+	ConsolaUtils::gotoxy(xlinha1-2, ylinha2 + 3);
+	cout << "Garagem: " << dgv->getGaragem();
 	
+
 
 
 	/*ConsolaUtils::drawLine(xlinha1-20, ylinha1, xlinha2+20, ylinha1, RGB(0, 0, 0));
@@ -92,12 +105,20 @@ bool Consola::nextCommand() {
 			}
 			else if (comando.at(0) == "cria")
 				dgv->cria(comando);
-			else if (comando.at(0) == "pista")
-				desenharPista(100, 10);
 			else if (comando.at(0) == "entranocarro")
 				dgv->entraNoCarro(comando);
 			else if (comando.at(0) == "saidocarro")
 				dgv->saiDoCarro(comando);
+			else if (comando.at(0) == "campeonato") {
+				dgv->comandoCampeonato(comando);
+				desenharPista(dgv->getComprimento(), dgv->getLargura());
+			}
+			else if (comando.at(0) == "infocampeonato")
+				dgv->infoCampeonato();
+			else if (comando.at(0) == "scoreboard")
+				dgv->scoreboard();
+			else if (comando.at(0) == "atualizaPista")
+				desenharPista(dgv->getComprimento(), dgv->getLargura());
 		}
 		catch (string ex) {
 			cout << ex << endl;
