@@ -25,7 +25,7 @@ public:
 		danificado
 	};
 	Estado estado;
-	Carro(string marca, string modelo, int capacidadeMax, int energiaInicial, int velocidadeMax);
+	Carro(string marca, int capacidadeMax, int energiaInicial, int velocidadeMax, string modelo = "Base");
 	void acelerar();
 	void travar();
 	int mover();

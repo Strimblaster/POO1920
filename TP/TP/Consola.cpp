@@ -11,6 +11,7 @@ void Consola::start() {
 	ConsolaUtils::setBackgroundColor(ConsolaUtils::BRANCO);
 	ConsolaUtils::setTextColor(ConsolaUtils::PRETO);
 	ConsolaUtils::clrscr();
+	ConsolaUtils::setScreenSize(40, 170);
 	ConsolaUtils::gotoxy(0, 25);
 	while (nextCommand());
 }
@@ -57,7 +58,7 @@ void Consola::desenharPista(int comprimento, int largura) {
 	int k = 0;
 	for (pair<Carro*, int> p : posicoes) {
 
-		ConsolaUtils::gotoxy(xlinha1 - 1 + p.second, ylinha1 + 1 + k);
+		ConsolaUtils::gotoxy((xlinha1 - 1 + p.second) >= 100 ? (100 + xlinha1) : (xlinha1 - 1 + p.second), ylinha1 + 1 + k);
 		cout << p.first->getid();
 		k++;
 	}
@@ -86,8 +87,10 @@ void Consola::desenharPista(int comprimento, int largura) {
 }
 
 bool Consola::nextCommand() {
-	
+	if (modo == 1)
+		cout << " ----- Simulador de carros - Modo 1 -----" << endl << endl;
 	while (true) {
+		
 		string c;
 		getline(cin, c);
 
@@ -99,36 +102,83 @@ bool Consola::nextCommand() {
 			comando.push_back(temp);
 
 		}
-		
+		if (comando.at(0) == "sair")
+			return false;
 		try {
-			if (modo == 1)
+			if (modo == 1) {
+				ConsolaUtils::gotoxy(0, 25);
+				ConsolaUtils::clrscr();
 				if (comando.at(0) == "lista")
 					cout << dgv->lista();
 				else if (comando.at(0) == "cria")
 					dgv->cria(comando);
+				else if (comando.at(0) == "apaga")
+					dgv->apaga(comando);
+				else if (comando.at(0) == "carregaP")
+					dgv->carregaP(comando);
+				else if (comando.at(0) == "carregaC")
+					dgv->carregaC(comando);
+				else if (comando.at(0) == "carregaA")
+					dgv->carregaA(comando);
 				else if (comando.at(0) == "entranocarro")
 					dgv->entraNoCarro(comando);
 				else if (comando.at(0) == "saidocarro")
 					dgv->saiDoCarro(comando);
 				else if (comando.at(0) == "campeonato") {
 					dgv->comandoCampeonato(comando);
-					modo = 2; continue;
+					modo = 2;
+					cout << endl << "----- Simulador de carros - Modo 2 -----" << endl;
+					continue;
 				}
 				else
 					cout << "Comando nao encontrado" << endl;
+			}
 			
 			if (modo == 2) {
-				if (comando.at(0) == "corrida")
-					desenharPista(dgv->getComprimento(), dgv->getLargura());
-				else if (comando.at(0) == "infocampeonato")
-					dgv->infoCampeonato();
-				else if (comando.at(0) == "scoreboard")
-					dgv->scoreboard();
-				else if (comando.at(0) == "passatempo")
-					if (passatempo(comando)) { dgv->scoreboard(); continue; }
-				else
-					cout << "Comando nao encontrado" << endl;
-				desenharPista(dgv->getComprimento(), dgv->getLargura());
+				try {
+					if (comando.at(0) == "corrida")
+						dgv->proxCorrida();
+					else if (comando.at(0) == "infocampeonato") {
+						ConsolaUtils::clrscr();
+						ConsolaUtils::gotoxy(0, 0);
+						dgv->infoCampeonato();
+						if (dgv->corridaADecorrer()) {
+							cout << endl << endl << "Clique numa tecla para voltar";
+							ConsolaUtils::getch();
+						}
+					}
+
+					else if (comando.at(0) == "scoreboard") {
+						ConsolaUtils::clrscr();
+						ConsolaUtils::gotoxy(0, 0);
+						dgv->scoreboard();
+						if (dgv->corridaADecorrer()) {
+							cout << endl << endl << "Clique numa tecla para voltar";
+							ConsolaUtils::getch();
+						}
+					}
+					else if (comando.at(0) == "passatempo") {
+						if (passatempo(comando)) {
+							ConsolaUtils::clrscr();
+							cout << "A corrida terminou!" << endl << endl;
+							cout << dgv->listaCarrosCampeonato();
+							continue;
+						}
+					}
+					else if (comando.at(0) == "listacarros") {
+						ConsolaUtils::clrscr();
+						cout << dgv->listaCarrosCampeonato();
+						cout << endl << "Prima qualquer tecla para continuar" << endl;
+						ConsolaUtils::getch();
+					}
+					else
+						cout << "Comando nao encontrado" << endl;
+					if (dgv->corridaADecorrer())desenharPista(dgv->getComprimento(), dgv->getLargura());
+				}
+				catch (string ex) {
+					cout << ex << endl << "Prima qualquer tecla para continuar" << endl;
+					ConsolaUtils::getch();
+				}
 			}
 
 		}

@@ -17,10 +17,15 @@ Campeonato::Campeonato(vector<Autodromo*> pistas, vector<Piloto*> pilotos, vecto
 	for (Carro* c : this->carros)
 		this->pontuacao.insert(pair<Piloto*, int>(c->getPiloto(), 0));
 
-	corridaAtual = 0;
+	corridaAtual = -1;
+	corridaAnterior = -1;
 	//Mete os carros no Autodromo da primeira corrida
 	for (Carro* c : this->carros)
-		this->pistas->at(corridaAtual)->autodromoController(c);
+		this->pistas->at(0)->autodromoController(c);
+}
+
+Campeonato::~Campeonato() {
+	delete pistas;
 }
 
 string Campeonato::scoreboard()
@@ -30,7 +35,7 @@ string Campeonato::scoreboard()
 
 	map<Piloto*, int> map = pontuacao;
 	
-	while (map.size() > 1) {
+	while (map.size() > 0) {
 		pair<Piloto*, int> maior(nullptr, -1);
 		for (pair<Piloto*, int> p : map) {
 			if (p.second > maior.second)
@@ -43,6 +48,14 @@ string Campeonato::scoreboard()
 	return oss.str();
 }
 
+void Campeonato::proximaCorrida()
+{
+	if(!partidaADecorrer())
+		corridaAtual = corridaAnterior + 1;
+	else
+		throw string("Partida já a decorrer");
+}
+
 
 string Campeonato::infoCampeonato()
 {
@@ -51,11 +64,13 @@ string Campeonato::infoCampeonato()
 
 	oss << "- Carros -" << endl;
 	for (Carro* c : carros)
-		oss << c->getid() << " " << c->getPiloto()->getNome() << endl;
+		oss << c->toString();
 
 	oss << "- Autodromos -" << endl;
 	for (Autodromo* a : *pistas)
 		oss << a->toString() << endl;
+
+
 	return oss.str();
 }
 
@@ -83,12 +98,27 @@ bool Campeonato::passaTempo()
 {
 	bool terminou = pistas->at(corridaAtual)->passaTempo();
 	int k = 0;
-	if (terminou)
+	if (terminou) {
 		for (Piloto* p : pistas->at(corridaAtual)->getTop3())
 			for (pair<Piloto*, int> par : pontuacao)
 				if (p == par.first) {
-					par.second += 10 / (k + 1);
+					pontuacao[p] += 10 / (k + 1);
 					k++;
 				}
+		corridaAnterior = corridaAtual;
+		corridaAtual = -1;
+	}
 	return terminou;
+}
+
+bool Campeonato::partidaADecorrer()
+{
+	return corridaAtual == -1 ? false : true;
+}
+
+string Campeonato::listaCarros()
+{
+	if (corridaAtual != -1) return pistas->at(corridaAtual)->listaCarros();
+	if (corridaAnterior != -1) return pistas->at(corridaAnterior)->listaCarros();
+	throw string("Nenhuma corrida inciada.");
 }

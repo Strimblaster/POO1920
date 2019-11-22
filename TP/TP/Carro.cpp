@@ -8,7 +8,7 @@ using namespace std;
 
 
 
-Carro::Carro(string marca, string modelo, int capacidadeMax, int energiaInicial, int velocidadeMax):capacidadeMax(capacidadeMax), velocidadeMax(velocidadeMax) {
+Carro::Carro(string marca, int capacidadeMax, int energiaInicial, int velocidadeMax, string modelo):capacidadeMax(capacidadeMax), velocidadeMax(velocidadeMax) {
 	if (energiaInicial > capacidadeMax) throw string("A Energia Inicial do carro deve ser inferior à Capacidade Maxima");
 	this->marca = marca;
 	this->modelo = modelo;

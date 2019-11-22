@@ -117,3 +117,20 @@ vector<Piloto*> Autodromo::getTop3()
 	}
 	return p;
 }
+
+string Autodromo::listaCarros() {
+	ostringstream oss;
+	oss << "---- Lista de Carros ----" << endl << endl;
+	
+	map<Carro*, int> cpy = posicoes;
+	pair<Carro*, int> maior(nullptr, -1);
+	for (int i = 0; cpy.size() != 0; i++) {
+		for (pair<Carro*, int> p : cpy)
+			if (maior.second < p.second)
+				maior = p;
+		oss << i + 1 << " - " << maior.second << "m : " << maior.first->toString();
+		cpy.erase(maior.first);
+		maior = pair<Carro*, int>(nullptr, -1);
+	}
+	return oss.str();
+}

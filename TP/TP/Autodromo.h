@@ -26,6 +26,7 @@ public:
 	bool passaTempo();
 	bool gameEnded();
 	vector<Piloto*> getTop3();
+	string listaCarros();
 	
 
 };

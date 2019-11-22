@@ -1,0 +1,6 @@
+4 100 A1Ficheiro
+5 100 A1Ficheiro
+5 
+A1Ficheiro
+2 100 A2Ficheiro
+2 100 

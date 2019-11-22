@@ -1,0 +1,5 @@
+10 1000 2000 TesteFicheiro1 T1
+10 1000 TesteFicheiro1 T1
+10 1000 2000 TesteFicheiro2
+1000 2000 TesteFicheiro2 10
+10 1000 2000 TesteFicheiro3 T2

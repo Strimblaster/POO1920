@@ -18,13 +18,14 @@ class DGV
 
 	void addPiloto(Piloto*);
 	void addCarro(Carro*);
-	void addAutodromo(Autodromo*);
+	void addAutodromo(vector<string> comando);
 	string listaPilotos();
 	string listaCarros();
 	string listaAutodromos();
 public:
 
 	DGV();
+	~DGV();
 	void cria(vector<string>);	
 	string lista();
 	void entraNoCarro(vector<string>);
@@ -37,6 +38,14 @@ public:
 	string getGaragem();
 	map<Carro*, int> getPosicoes();
 	bool passaTempo();
+	bool corridaADecorrer();
+	void proxCorrida();
+	string listaCarrosCampeonato();
+	void apaga(vector<string>);
+	void carregaP(vector<string>);
+	void carregaC(vector<string>);
+	void carregaA(vector<string>);
+
 
 };
 #endif
