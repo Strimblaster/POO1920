@@ -2,7 +2,7 @@
 
 
 Autodromo::Autodromo(string nome, int largura, int comprimento, vector<Autodromo*> autodromos):comprimento(comprimento),largura(largura) {
-	for (int i = 0; i < autodromos.size(); i++)
+	for (unsigned int i = 0; i < autodromos.size(); i++)
 		if (autodromos.at(i)->getNome() == nome) {
 			nome += "1";
 			i = -1;
@@ -45,7 +45,7 @@ void Autodromo::autodromoController(Carro* carro)
 	if (carro->estado == Carro::danificado || carro->getPiloto() == nullptr) throw string("Erro: Este carro não pode correr\n");
 	
 	//Se o carro estiver na garagem, mete na pista
-	for (int i = 0; i < garagem.size(); i++)
+	for (unsigned int i = 0; i < garagem.size(); i++)
 		if (carro == garagem.at(i)) {
 			//Falta verificar se tem espaço na pista
 			posicoes.insert(pair<Carro*, int>(garagem.at(i), 0));
@@ -63,7 +63,7 @@ void Autodromo::autodromoController(Carro* carro)
 	//Chegando aqui, o carro não está no Autodromo
 	//Adiciona o carro na pista se couber (se não na garagem)
 
-	if (posicoes.size() < largura)
+	if (posicoes.size() < (unsigned)largura)
 		posicoes.insert(pair<Carro*, int>(carro, 0));
 	else
 		garagem.push_back(carro);
@@ -88,6 +88,8 @@ bool Autodromo::passaTempo()
 	for (pair<Carro*, int> p : posicoes) {
 		int i = p.first->mover();
 		posicoes[p.first] += i;
+		if(posicoes[p.first] > comprimento)
+			posicoes[p.first] += comprimento;
 	}
 	if (gameEnded()) return true;
 	return false;

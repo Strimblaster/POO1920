@@ -17,6 +17,7 @@ void Consola::start() {
 }
 
 void Consola::desenharPista(int comprimento, int largura) {
+	comprimento = comprimento / 10;
 	int xlinha1 = 7;
 	int xlinha2 = xlinha1 + (comprimento * 10);
 	int ylinha1 = 4;
@@ -58,7 +59,7 @@ void Consola::desenharPista(int comprimento, int largura) {
 	int k = 0;
 	for (pair<Carro*, int> p : posicoes) {
 
-		ConsolaUtils::gotoxy((xlinha1 - 1 + p.second) >= 100 ? (100 + xlinha1) : (xlinha1 - 1 + p.second), ylinha1 + 1 + k);
+		ConsolaUtils::gotoxy(xlinha1 - 1 + p.second/10, ylinha1 + 1 + k);
 		cout << p.first->getid();
 		k++;
 	}
@@ -130,6 +131,8 @@ bool Consola::nextCommand() {
 					cout << endl << "----- Simulador de carros - Modo 2 -----" << endl;
 					continue;
 				}
+				else if (comando.at(0) == "help")
+					cout << "Lista de comandos - Modo 1:\nlista\ncria\napaga\ncarregaP\ncarregaC\ncarregaA\nentranocarro\nsaidocarro\ncampeonato\n";
 				else
 					cout << "Comando nao encontrado" << endl;
 			}
@@ -171,6 +174,8 @@ bool Consola::nextCommand() {
 						cout << endl << "Prima qualquer tecla para continuar" << endl;
 						ConsolaUtils::getch();
 					}
+					else if (comando.at(0) == "help")
+						cout << "Lista de comandos - Modo 2:\ncorrida\ninfocampeonato\nscoreboard\npassatempo\nlistacarros\n";
 					else
 						cout << "Comando nao encontrado" << endl;
 					if (dgv->corridaADecorrer())desenharPista(dgv->getComprimento(), dgv->getLargura());

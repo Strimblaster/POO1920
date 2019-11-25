@@ -5,6 +5,17 @@
 DGV::DGV() {
 	campeonato = nullptr;
 	//carros.push_back(new Carro("Mercedes", "Corno", 6000, 4000, 100));
+	carros.push_back(new Carro("Mercedes", 6000, 4000, 1000));
+	carros.push_back(new Carro("Mercedes", 6000, 4000, 300));
+	carros.push_back(new Carro("Mercedes", 6000, 4000, 500));
+
+	pilotos.push_back(new Piloto("P1", pilotos));
+	pilotos.push_back(new Piloto("P2", pilotos));
+	pilotos.push_back(new Piloto("P3", pilotos));
+
+	autodromos.push_back(new Autodromo("A1", 5, 1000, autodromos));
+	autodromos.push_back(new Autodromo("A1", 5, 2000, autodromos));
+	autodromos.push_back(new Autodromo("A1", 5, 600, autodromos));
 }
 
 DGV::~DGV() {
@@ -38,6 +49,7 @@ void DGV::cria(vector<string> comando) {
 		if (comando.size() == 7)
 			try {
 				addCarro(new Carro(comando.at(4), stoi(comando.at(2)), stoi(comando.at(3)), stoi(comando.at(5))));
+
 			}
 			catch (invalid_argument ex) {
 				throw string("Usar: cria c marca modelo capacidadeMax energiaInicial velMax");
@@ -257,7 +269,7 @@ string DGV::listaCarros() {
 	ostringstream s;
 	s << endl << " --- Lista de Carros ---" << endl;
 	if (carros.size() == 0)
-		return "Nao existem carros\n";
+		s << "Nao existem carros\n";
 	for (Carro* c : carros) {
 		s << c->toString();
 	}
@@ -302,7 +314,10 @@ string DGV::listaAutodromos()
 	for (Autodromo* a : autodromos) {
 		oss << a->toString() << endl;
 	}
+
 	return oss.str();
+
+
 }
 
 void DGV::infoCampeonato()
