@@ -42,16 +42,17 @@ string Autodromo::toString()
 
 void Autodromo::autodromoController(Carro* carro)
 {
-	if (carro->estado == Carro::danificado || carro->getPiloto() == nullptr) throw string("Erro: Este carro não pode correr\n");
+
 	
 	//Se o carro estiver na garagem, mete na pista
-	for (unsigned int i = 0; i < garagem.size(); i++)
-		if (carro == garagem.at(i)) {
-			//Falta verificar se tem espaço na pista
-			posicoes.insert(pair<Carro*, int>(garagem.at(i), 0));
-			garagem.erase(garagem.begin()+i);
-			return;
-		}
+	if (!(carro->estado == Carro::danificado || carro->getPiloto() == nullptr))
+		for (unsigned int i = 0; i < garagem.size(); i++)
+			if (carro == garagem.at(i)) {
+				//Falta verificar se tem espaço na pista
+				posicoes.insert(pair<Carro*, int>(garagem.at(i), 0));
+				garagem.erase(garagem.begin()+i);
+				return;
+			}
 	//Se o carro estiver na pista, mete na garagem
 	for(pair<Carro*, int> p : posicoes)
 		if (p.first == carro) {
@@ -62,7 +63,8 @@ void Autodromo::autodromoController(Carro* carro)
 
 	//Chegando aqui, o carro não está no Autodromo
 	//Adiciona o carro na pista se couber (se não na garagem)
-
+	if(carro->estado == Carro::danificado || carro->getPiloto() == nullptr)
+		garagem.push_back(carro);
 	if (posicoes.size() < (unsigned)largura)
 		posicoes.insert(pair<Carro*, int>(carro, 0));
 	else
@@ -76,6 +78,16 @@ string Autodromo::getGaragem()
 	for (Carro* c : garagem)
 		oss << c->getid() << " ";
 	return oss.str();
+}
+
+vector<Carro*> Autodromo::getGaragem(int i) {
+	return garagem;
+}
+
+void Autodromo::clear()
+{
+	garagem.clear();
+	posicoes.clear();
 }
 
 map<Carro*, int> Autodromo::getPosicoes()
@@ -122,7 +134,7 @@ vector<Piloto*> Autodromo::getTop3()
 
 string Autodromo::listaCarros() {
 	ostringstream oss;
-	oss << "---- Lista de Carros ----" << endl << endl;
+	oss << "---- Lista de Carros na Pista ----" << endl << endl;
 	
 	map<Carro*, int> cpy = posicoes;
 	pair<Carro*, int> maior(nullptr, -1);
@@ -130,7 +142,7 @@ string Autodromo::listaCarros() {
 		for (pair<Carro*, int> p : cpy)
 			if (maior.second < p.second)
 				maior = p;
-		oss << i + 1 << " - " << maior.second << "m : " << maior.first->toString();
+		oss << i + 1 << " - " << maior.second << "m : "<< maior.first->getid() << " Piloto: " << maior.first->getPiloto()->getNome() << endl ;
 		cpy.erase(maior.first);
 		maior = pair<Carro*, int>(nullptr, -1);
 	}

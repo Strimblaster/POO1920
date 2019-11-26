@@ -27,7 +27,8 @@ public:
 	bool gameEnded();
 	vector<Piloto*> getTop3();
 	string listaCarros();
-	
+	vector<Carro*> getGaragem(int i);
+	void clear();
 
 };
 #endif
