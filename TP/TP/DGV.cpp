@@ -14,7 +14,7 @@ DGV::DGV() {
 	pilotos.push_back(new Piloto("P3", pilotos));
 
 	autodromos.push_back(new Autodromo("A1", 5, 1000, autodromos));
-	autodromos.push_back(new Autodromo("A1", 5, 2000, autodromos));
+	autodromos.push_back(new Autodromo("A1", 5, 1500, autodromos));
 	autodromos.push_back(new Autodromo("A1", 5, 600, autodromos));
 }
 
@@ -32,7 +32,6 @@ DGV::~DGV() {
 		autodromos.erase(autodromos.begin());
 	}
 	delete campeonato;
-
 }
 
 
@@ -57,8 +56,15 @@ void DGV::cria(vector<string> comando) {
 		cout << "Carro criado!" << endl;
 	}
 	else if (comando.at(1) == "p") {
-		if (comando.size() != 4) throw string("Usar: cria p Nome");
-		addPiloto(new Piloto(comando.at(2), pilotos));
+		if (comando.size() < 4) throw string("Usar: cria p Nome");
+		ostringstream oss;
+		for (unsigned int i = 2; i < comando.size()-1; i++)
+		{	
+			if (i > 2)
+				oss << " ";
+			oss << comando.at(i);
+		}
+		addPiloto(new Piloto(oss.str(), pilotos));
 		cout << "Piloto criado!" << endl;
 	}
 	else if (comando.at(1) == "a") {
@@ -85,10 +91,17 @@ void DGV::apaga(vector<string> comando) {
 		delete car;
 	}
 	else if (comando.at(1) == "p") {
-		if (comando.size() != 4) throw string("Usar: apaga p Nome");
+		if (comando.size() < 4) throw string("Usar: apaga p Nome");
 		Piloto* p = nullptr;
+		ostringstream nome;
+		for (unsigned int i = 2; i < comando.size() - 1; i++)
+		{
+			if (i > 2)
+				nome << " ";
+			nome << comando.at(i);
+		}
 		for (Piloto* i : pilotos)
-			if (i->getNome() == comando.at(2))
+			if (i->getNome() == nome.str())
 				p = i;
 		if (p == nullptr) throw string("Piloto nao encontrado");
 		for (Carro* c : carros)
@@ -126,12 +139,22 @@ void DGV::carregaP(vector<string> comando)
 	while (getline(f, line))
 	{
 		istringstream iss(line);
-		string tipo, nome;
+		ostringstream nome;
+		string tipo;
 		iss >> tipo;
-		iss >> nome;
-		if (tipo != "generico" || nome.size() == 0) continue;
+		for (int i = 0; iss; i++)
+		{
+			string temp;
+			iss >> temp;
+			if (i > 0) nome << " ";
+			nome << temp;
+		}
+		string n = nome.str();
+		n.erase(n.end());
 
-		addPiloto(new Piloto(nome, pilotos));
+		if (tipo != "generico" || n.size() == 0) continue;
+
+		addPiloto(new Piloto(n, pilotos));
 	}
 	f.close();
 
@@ -280,13 +303,17 @@ string DGV::listaCarros() {
 void DGV::comandoCampeonato(vector<string> comando) {
 	if (comando.size() < 3) throw string("Usar: campeonato A1 A2 ... An");
 	Autodromo* aut = nullptr;
-	for (Autodromo* a : autodromos)
-		if (a->getNome() == comando.at(1))
-			aut = a;
-	if (aut == nullptr)
-		throw string("Autodromo nao encontrado");
 	vector<Autodromo*> pistas;
-	pistas.push_back(aut);
+	for (unsigned int i = 1; i < comando.size()-1; i++)
+	{
+		for (Autodromo* a : autodromos)
+			if (a->getNome() == comando.at(i))
+				aut = a;
+		if (aut == nullptr)
+			continue;
+		pistas.push_back(aut);
+	}
+	if (pistas.size() == 0) throw string("Nenhum autodromo encontrado");
 	this->campeonato = new Campeonato(pistas, pilotos, carros);
 }
 
@@ -350,12 +377,22 @@ bool DGV::passaTempo()
 
 bool DGV::corridaADecorrer()
 {
+	if (campeonato == nullptr)
+		return false;
 	return campeonato->partidaADecorrer();
 }
 
-void DGV::proxCorrida()
+bool DGV::proxCorrida()
 {
-	campeonato->proximaCorrida();
+	if (campeonato->proximaCorrida()) {
+		for (Autodromo* a : autodromos)
+			a->clear();
+		delete campeonato;
+		campeonato = nullptr;
+		return true;
+	}
+	else 
+		return false;
 }
 
 string DGV::listaCarrosCampeonato()

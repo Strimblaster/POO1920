@@ -39,7 +39,7 @@ public:
 	map<Carro*, int> getPosicoes();
 	bool passaTempo();
 	bool corridaADecorrer();
-	void proxCorrida();
+	bool proxCorrida();
 	string listaCarrosCampeonato();
 	void apaga(vector<string>);
 	void carregaP(vector<string>);

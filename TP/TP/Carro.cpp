@@ -17,20 +17,23 @@ Carro::Carro(string marca, int capacidadeMax, int energiaInicial, int velocidade
 	else
 		this->id = 'A' + this->contador++;
 	this->velocidade = 0;
-	this->estado = parado;
 	this->energia = (float)energiaInicial;
 	sinalEmergencia = false;
+	estado = parado;
 }
 
 void Carro::acelerar() {
 	if (estado == danificado || piloto == nullptr) return;
-	if (energia > 0 && velocidade < velocidadeMax)
+	if (energia > 0 && velocidade < velocidadeMax) {
 		velocidade++;
+		estado = movimento;
+	}
 }
 
 void Carro::travar() {
 	if (estado == danificado || piloto == nullptr) return;
-	velocidade--;
+	if(velocidade > 0) velocidade--;
+	if (velocidade == 0) estado = parado;
 }
 
 int Carro::mover() {
@@ -81,6 +84,12 @@ int Carro::contador = 0;
 
 Piloto* Carro::getPiloto() {
 	return piloto;
+}
+
+void Carro::setVel(int v) {
+	velocidade = v;
+	if (v == 0) estado = parado;
+	else estado = movimento;
 }
 
 

@@ -48,19 +48,38 @@ string Campeonato::scoreboard()
 	return oss.str();
 }
 
-void Campeonato::proximaCorrida()
+bool Campeonato::proximaCorrida()
 {
-	if(!partidaADecorrer())
+	if (!partidaADecorrer()) {
 		corridaAtual = corridaAnterior + 1;
+		if (corridaAtual == pistas->size())
+			return true;
+		if (corridaAtual != 0)
+			moveCarros(pistas->at(corridaAnterior), pistas->at(corridaAtual));
+	}
 	else
 		throw string("Partida já a decorrer");
+	return false;
+}
+
+void Campeonato::moveCarros(Autodromo* anterior, Autodromo* atual)
+{
+	for (pair<Carro*, int> p : anterior->getPosicoes())
+	{
+		atual->autodromoController(p.first);
+	}
+
+	for (Carro* c : atual->getGaragem(0))
+	{
+		atual->autodromoController(c);
+	}
 }
 
 
 string Campeonato::infoCampeonato()
 {
 	ostringstream oss;
-	oss << endl << "---- InfoCampeonato ---" << endl;
+	oss << endl << "---- InfoCampeonato ---" << endl << endl;
 
 	oss << "- Carros -" << endl;
 	for (Carro* c : carros)
@@ -99,12 +118,18 @@ bool Campeonato::passaTempo()
 	bool terminou = pistas->at(corridaAtual)->passaTempo();
 	int k = 0;
 	if (terminou) {
+		//Acrescenta a pontuação aos que ganharam
 		for (Piloto* p : pistas->at(corridaAtual)->getTop3())
 			for (pair<Piloto*, int> par : pontuacao)
 				if (p == par.first) {
 					pontuacao[p] += 10 / (k + 1);
 					k++;
 				}
+		//Pára os carros
+		for (pair<Carro*, int> p : pistas->at(corridaAtual)->getPosicoes()) {
+			p.first->setVel(0);
+		}
+
 		corridaAnterior = corridaAtual;
 		corridaAtual = -1;
 	}

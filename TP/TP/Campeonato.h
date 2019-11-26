@@ -12,13 +12,14 @@ class Campeonato
 	vector<Carro*> carros;
 	int corridaAtual;
 	int corridaAnterior;
+	void moveCarros(Autodromo*, Autodromo*);
 
 public:
 	Campeonato(vector<Autodromo*>, vector<Piloto*>, vector<Carro*>);
 	~Campeonato();
 
 	string scoreboard();
-	void proximaCorrida();
+	bool proximaCorrida();
 	string infoCampeonato();
 
 	string getGaragem();

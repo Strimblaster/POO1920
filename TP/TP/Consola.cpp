@@ -12,7 +12,6 @@ void Consola::start() {
 	ConsolaUtils::setTextColor(ConsolaUtils::PRETO);
 	ConsolaUtils::clrscr();
 	ConsolaUtils::setScreenSize(40, 170);
-	ConsolaUtils::gotoxy(0, 25);
 	while (nextCommand());
 }
 
@@ -65,8 +64,11 @@ void Consola::desenharPista(int comprimento, int largura) {
 	}
 
 
-	ConsolaUtils::gotoxy(xlinha1-2, ylinha2 + 3);
+	ConsolaUtils::gotoxy(xlinha1 + 70, ylinha2 + 3);
 	cout << "Garagem: " << dgv->getGaragem();
+
+	ConsolaUtils::gotoxy(0, ylinha2 + 3);
+	cout << dgv->listaCarrosCampeonato();
 	
 
 
@@ -84,7 +86,7 @@ void Consola::desenharPista(int comprimento, int largura) {
 
 	
 
-	ConsolaUtils::gotoxy(0, 25);
+	ConsolaUtils::gotoxy(0, 35);
 }
 
 bool Consola::nextCommand() {
@@ -107,7 +109,6 @@ bool Consola::nextCommand() {
 			return false;
 		try {
 			if (modo == 1) {
-				ConsolaUtils::gotoxy(0, 25);
 				ConsolaUtils::clrscr();
 				if (comando.at(0) == "lista")
 					cout << dgv->lista();
@@ -139,8 +140,10 @@ bool Consola::nextCommand() {
 			
 			if (modo == 2) {
 				try {
-					if (comando.at(0) == "corrida")
-						dgv->proxCorrida();
+					if (comando.at(0) == "corrida") {
+						if (dgv->proxCorrida())
+							modo = 1;
+					}
 					else if (comando.at(0) == "infocampeonato") {
 						ConsolaUtils::clrscr();
 						ConsolaUtils::gotoxy(0, 0);

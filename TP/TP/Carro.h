@@ -34,7 +34,7 @@ public:
 	const char getid();
 	Piloto* getPiloto();
 	void sairPiloto();
-	
+	void setVel(int v);
 
 };
 
