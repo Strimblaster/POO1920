@@ -1,4 +1,5 @@
 #include "Autodromo.h"
+#include <algorithm>
 
 
 Autodromo::Autodromo(string nome, int largura, int comprimento, vector<Autodromo*> autodromos):comprimento(comprimento),largura(largura) {
@@ -49,15 +50,15 @@ void Autodromo::autodromoController(Carro* carro)
 		for (unsigned int i = 0; i < garagem.size(); i++)
 			if (carro == garagem.at(i)) {
 				//Falta verificar se tem espaço na pista
-				posicoes.insert(pair<Carro*, int>(garagem.at(i), 0));
+				pista.push_back(new Via(carro, pista.size()));
 				garagem.erase(garagem.begin()+i);
 				return;
 			}
 	//Se o carro estiver na pista, mete na garagem
-	for(pair<Carro*, int> p : posicoes)
-		if (p.first == carro) {
-			garagem.push_back(p.first);
-			posicoes.erase(p.first);
+	for(auto it=pista.begin(); it != pista.end(); it++)
+		if ((*it)->getCarro() == carro) {
+			garagem.push_back((*it)->getCarro());
+			pista.erase(it);
 			return;
 		}
 
@@ -65,8 +66,8 @@ void Autodromo::autodromoController(Carro* carro)
 	//Adiciona o carro na pista se couber (se não na garagem)
 	if(carro->estado == Carro::danificado || carro->getPiloto() == nullptr)
 		garagem.push_back(carro);
-	if (posicoes.size() < (unsigned)largura)
-		posicoes.insert(pair<Carro*, int>(carro, 0));
+	if (pista.size() < (unsigned)largura)
+		pista.push_back(new Via(carro, pista.size()));
 	else
 		garagem.push_back(carro);
 
@@ -87,64 +88,57 @@ vector<Carro*> Autodromo::getGaragem(int i) {
 void Autodromo::clear()
 {
 	garagem.clear();
-	posicoes.clear();
+	pista.clear();
 }
 
-map<Carro*, int> Autodromo::getPosicoes()
+vector<Via*> Autodromo::getPosicoes()
 {
-	return posicoes;
+	return pista;
 }
 
 bool Autodromo::passaTempo()
 {
-	for (pair<Carro*, int> p : posicoes) {
-		int i = p.first->mover();
-		posicoes[p.first] += i;
-		if(posicoes[p.first] > comprimento)
-			posicoes[p.first] += comprimento;
-	}
+	for (Via* p : pista)
+		if(p->getPosicao() < comprimento) p->mover(comprimento);
 	if (gameEnded()) return true;
 	return false;
 }
 
 bool Autodromo::gameEnded()
 {
-	for (pair<Carro*, int> p : posicoes)
-		if (p.second >= comprimento)
-			return true;
-	return false;
+	int i = 0;
+	for (Via* p : pista)
+		if (p->getPosicao() >= comprimento)
+			i++;
+	return i == pista.size();
 }
 
 vector<Piloto*> Autodromo::getTop3()
 {
+	sortVias();
 	vector<Piloto*> p;
-	map<Carro*, int> cpy = posicoes;
-	pair<Carro*, int> maior(nullptr, -1);
-	for (int i = 0; i < 3; i++) {
-		for (pair<Carro*, int> p : cpy)
-			if (maior.second < p.second)
-				maior = p;
-		if (maior.first == nullptr) return p;
-		p.push_back(maior.first->getPiloto());
-		cpy.erase(maior.first);
-		maior = pair<Carro*, int>(nullptr, -1);
-	}
+	for (unsigned int i = 0; i < 3 && i < pista.size(); i++)
+		p.push_back(pista.at(i)->getCarro()->getPiloto());
 	return p;
 }
 
 string Autodromo::listaCarros() {
 	ostringstream oss;
 	oss << "---- Lista de Carros na Pista ----" << endl << endl;
-	
-	map<Carro*, int> cpy = posicoes;
-	pair<Carro*, int> maior(nullptr, -1);
-	for (int i = 0; cpy.size() != 0; i++) {
-		for (pair<Carro*, int> p : cpy)
-			if (maior.second < p.second)
-				maior = p;
-		oss << i + 1 << " - " << maior.second << "m : "<< maior.first->getid() << " Piloto: " << maior.first->getPiloto()->getNome() << endl ;
-		cpy.erase(maior.first);
-		maior = pair<Carro*, int>(nullptr, -1);
+	sortVias();
+	int i = 1;
+	for (auto it = pista.begin(); it != pista.end(); it++) {
+		oss << i << " - " << (*it)->getPosicao() << "m : " << (*it)->getCarro()->getid() << " Piloto: " << (*it)->getCarro()->getPiloto()->toString() << endl;
+		i++;
 	}
+
 	return oss.str();
 }
+
+bool comparador(Via* i, Via* j) { return (i->getPosicao() > j->getPosicao()); }
+
+void Autodromo::sortVias() {
+	
+	sort(pista.begin(), pista.end(), comparador);
+}
+

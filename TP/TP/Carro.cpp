@@ -37,11 +37,14 @@ void Carro::travar() {
 }
 
 int Carro::mover() {
-	//if (estado == danificado || estado == parado || piloto == nullptr) return 0;
-	if (energia == 0)
-		travar();
-	else
-		acelerar();
+
+	if (energia == 0) travar();
+	try {
+		velocidade += piloto->mover(energia, capacidadeMax);
+	}
+	catch (string s) {
+
+	}
 
 	return velocidade;
 }

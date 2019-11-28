@@ -1,4 +1,5 @@
 #include "Carro.h"
+#include "Via.h"
 #include <vector>
 #include <map>
 #include <sstream>
@@ -9,7 +10,7 @@ using namespace std;
 class Autodromo
 {
 	vector<Carro*> garagem;
-	map<Carro*, int> posicoes;
+	vector<Via*> pista;
 	const int largura;
 	const int comprimento;
 	string nome;
@@ -22,13 +23,14 @@ public:
 	string toString();
 	void autodromoController(Carro*);
 	string getGaragem();
-	map<Carro*, int> getPosicoes();
+	vector<Via*> getPosicoes();
 	bool passaTempo();
 	bool gameEnded();
 	vector<Piloto*> getTop3();
 	string listaCarros();
 	vector<Carro*> getGaragem(int i);
 	void clear();
+	void sortVias();
 
 };
 #endif

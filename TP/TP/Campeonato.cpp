@@ -64,9 +64,9 @@ bool Campeonato::proximaCorrida()
 
 void Campeonato::moveCarros(Autodromo* anterior, Autodromo* atual)
 {
-	for (pair<Carro*, int> p : anterior->getPosicoes())
+	for (Via* p : anterior->getPosicoes())
 	{
-		atual->autodromoController(p.first);
+		atual->autodromoController(p->getCarro());
 	}
 
 	for (Carro* c : atual->getGaragem(0))
@@ -98,7 +98,7 @@ string Campeonato::getGaragem()
 	return pistas->at(corridaAtual)->getGaragem();
 }
 
-map<Carro*, int> Campeonato::getPosicoes()
+vector<Via*> Campeonato::getPosicoes()
 {
 	return pistas->at(corridaAtual)->getPosicoes();
 }
@@ -126,8 +126,8 @@ bool Campeonato::passaTempo()
 					k++;
 				}
 		//Pára os carros
-		for (pair<Carro*, int> p : pistas->at(corridaAtual)->getPosicoes()) {
-			p.first->setVel(0);
+		for (Via* p : pistas->at(corridaAtual)->getPosicoes()) {
+			p->getCarro()->setVel(0);
 		}
 
 		corridaAnterior = corridaAtual;

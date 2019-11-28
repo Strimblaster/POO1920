@@ -156,9 +156,13 @@
     <ClCompile Include="Carro.cpp" />
     <ClCompile Include="Consola.cpp" />
     <ClCompile Include="ConsolaUtils.cpp" />
+    <ClCompile Include="CrazyDriver.cpp" />
     <ClCompile Include="DGV.cpp" />
+    <ClCompile Include="FastDriver.cpp" />
     <ClCompile Include="Piloto.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Via.cpp" />
+    <ClCompile Include="Surpresa.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Autodromo.h" />
@@ -166,8 +170,12 @@
     <ClInclude Include="Carro.h" />
     <ClInclude Include="Consola.h" />
     <ClInclude Include="ConsolaUtils.h" />
+    <ClInclude Include="CrazyDriver.h" />
     <ClInclude Include="DGV.h" />
+    <ClInclude Include="FastDriver.h" />
     <ClInclude Include="Piloto.h" />
+    <ClInclude Include="Via.h" />
+    <ClInclude Include="Surpresa.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

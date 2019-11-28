@@ -10,12 +10,15 @@ class Piloto
 {
 	string nome;
 
+protected:
+	string tipo;
 
 public:
 	Piloto(string, vector<Piloto*>);
 
 	string getNome() const;
 	string toString();
+	virtual int mover(float energia, int capacidadeMax, int posicao = 0);
 };
 
 #endif

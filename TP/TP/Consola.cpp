@@ -54,12 +54,12 @@ void Consola::desenharPista(int comprimento, int largura) {
 		cout << '|';
 	}
 
-	map<Carro*, int> posicoes = dgv->getPosicoes();
+	vector<Via*> posicoes = dgv->getPosicoes();
 	int k = 0;
-	for (pair<Carro*, int> p : posicoes) {
+	for (Via* p : posicoes) {
 
-		ConsolaUtils::gotoxy(xlinha1 - 1 + p.second/10, ylinha1 + 1 + k);
-		cout << p.first->getid();
+		ConsolaUtils::gotoxy(xlinha1 + p->getPosicao()/10, ylinha1 + 1 + k);
+		cout << p->getCarro()->getid();
 		k++;
 	}
 

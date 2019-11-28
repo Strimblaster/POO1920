@@ -23,7 +23,7 @@ public:
 	string infoCampeonato();
 
 	string getGaragem();
-	map<Carro*, int> getPosicoes();
+	vector<Via*> getPosicoes();
 	int getLargura();
 	int getComprimento();
 	bool passaTempo();

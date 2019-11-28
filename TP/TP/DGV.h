@@ -6,6 +6,8 @@
 #include <sstream>
 #include "Autodromo.h"
 #include "Campeonato.h"
+#include "CrazyDriver.h"
+#include "FastDriver.h"
 
 using namespace std;
 
@@ -36,7 +38,7 @@ public:
 	void infoCampeonato();
 	void scoreboard();
 	string getGaragem();
-	map<Carro*, int> getPosicoes();
+	vector<Via*> getPosicoes();
 	bool passaTempo();
 	bool corridaADecorrer();
 	bool proxCorrida();

@@ -11,8 +11,8 @@ DGV::DGV() {
 	carros.push_back(new Carro("Mercedes", 6000, 4000, 500));
 
 	pilotos.push_back(new Piloto("P1", pilotos));
-	pilotos.push_back(new Piloto("P2", pilotos));
-	pilotos.push_back(new Piloto("P3", pilotos));
+	pilotos.push_back(new FastDriver("P2", pilotos));
+	pilotos.push_back(new CrazyDriver("P3", pilotos));
 
 	autodromos.push_back(new Autodromo("A1", 5, 1000, autodromos));
 	autodromos.push_back(new Autodromo("A1", 5, 1500, autodromos));
@@ -245,10 +245,11 @@ void DGV::entraNoCarro(vector<string> comando)
 	for (Carro* c : carros) {
 		if (c->getid() == comando.at(1)[0]) {
 			c->entrarPiloto(piloto);
+			return;
 		}
 			
 	}
-
+	throw string("O Carro nao foi encontrado");
 }
 
 void DGV::addAutodromo(vector<string> comando)
@@ -371,7 +372,7 @@ string DGV::getGaragem()
 	return campeonato->getGaragem();
 }
 
-map<Carro*, int> DGV::getPosicoes()
+vector<Via*> DGV::getPosicoes()
 {
 	return campeonato->getPosicoes();
 }
