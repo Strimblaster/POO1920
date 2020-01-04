@@ -36,11 +36,11 @@ void Carro::travar() {
 	if (velocidade == 0) estado = parado;
 }
 
-int Carro::mover() {
+int Carro::mover(int pos, int nCarros) {
 
 	if (energia == 0) travar();
 	try {
-		velocidade += piloto->mover(energia, capacidadeMax);
+		velocidade += piloto->mover(energia, capacidadeMax, pos, nCarros);
 	}
 	catch (string s) {
 

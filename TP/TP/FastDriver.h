@@ -7,7 +7,7 @@ class FastDriver : public Piloto
 
 public:
 	FastDriver(string, vector<Piloto*>);
-	int mover(float energia, int capacidadeMax, int posicao) override;
+	int mover(float energia, int capacidadeMax, int posicao, int nCarros) override;
 
 };
 

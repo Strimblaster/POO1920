@@ -57,8 +57,7 @@ void Consola::desenharPista(int comprimento, int largura) {
 	vector<Via*> posicoes = dgv->getPosicoes();
 	int k = 0;
 	for (Via* p : posicoes) {
-
-		ConsolaUtils::gotoxy(xlinha1 + p->getPosicao()/10, ylinha1 + 1 + k);
+		ConsolaUtils::gotoxy(xlinha1 -1 + p->getPosicao()/10, ylinha1 + 1 + k);
 		cout << p->getCarro()->getid();
 		k++;
 	}

@@ -28,9 +28,9 @@ int Via::getTempo()
 	return tempo;
 }
 
-void Via::mover(int comp)
+void Via::mover(int comp, int pos, int nCarros)
 {
-	posicao += carro->mover();
+	posicao += carro->mover(pos, nCarros);
 	if (posicao > comp)
 		posicao = comp;
 	tempo++;

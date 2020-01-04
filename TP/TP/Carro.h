@@ -28,7 +28,7 @@ public:
 	Carro(string marca, int capacidadeMax, int energiaInicial, int velocidadeMax, string modelo = "Base");
 	void acelerar();
 	void travar();
-	int mover();
+	int mover(int pos, int nCarros);
 	void entrarPiloto(Piloto* p);
 	string toString();
 	const char getid();

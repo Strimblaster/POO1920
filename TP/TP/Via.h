@@ -16,7 +16,7 @@ public:
 	int getPosicao();
 	int getPista();
 	int getTempo();
-	void mover(int comp);
+	void mover(int comp, int pos, int nCarros);
 
 	Via& operator+=(const int i);
 };

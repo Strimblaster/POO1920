@@ -5,7 +5,7 @@ FastDriver::FastDriver(string nome, vector<Piloto*> pilotos) :Piloto(nome, pilot
 	tipo = "Fast";
 }
 
-int FastDriver::mover(float energia, int capacidadeMax, int posicao) {
+int FastDriver::mover(float energia, int capacidadeMax, int posicao, int nCarros) {
 
 	if (energia == 0) return 0;
 	return 3;

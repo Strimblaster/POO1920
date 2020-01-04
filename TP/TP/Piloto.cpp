@@ -24,7 +24,7 @@ string Piloto::toString()
 	return oss.str();
 }
 
-int Piloto::mover(float energia, int capacidadeMax, int posicao)
+int Piloto::mover(float energia, int capacidadeMax, int posicao, int nCarros)
 {
 	if (energia == 0) return 0;
 	return 1;

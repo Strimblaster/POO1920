@@ -98,8 +98,11 @@ vector<Via*> Autodromo::getPosicoes()
 
 bool Autodromo::passaTempo()
 {
-	for (Via* p : pista)
-		if(p->getPosicao() < comprimento) p->mover(comprimento);
+	sortVias();
+	for (unsigned int i = 0; i < pista.size(); i++)
+		if (pista.at(i)->getPosicao() < comprimento)
+			pista.at(i)->mover(comprimento, i+1, pista.size());
+
 	if (gameEnded()) return true;
 	return false;
 }
@@ -135,7 +138,14 @@ string Autodromo::listaCarros() {
 	return oss.str();
 }
 
-bool comparador(Via* i, Via* j) { return (i->getPosicao() > j->getPosicao()); }
+bool comparador(Via* i, Via* j) {
+	if (i->getPosicao() > j->getPosicao())
+		return true;
+	else if (i->getPosicao() == j->getPosicao()) {
+		return i->getTempo() < j->getTempo();
+	}
+	return (i->getPosicao() > j->getPosicao()); 
+}
 
 void Autodromo::sortVias() {
 	

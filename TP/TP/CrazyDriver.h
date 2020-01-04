@@ -8,7 +8,7 @@ class CrazyDriver :public Piloto
 	int posicao;
 public:
 	CrazyDriver(string nome, vector<Piloto*> pilotos);
-	int mover(float energia, int capacidadeMax, int posicao) override;
+	int mover(float energia, int capacidadeMax, int posicao, int nCarros) override;
 };
 
 #endif
