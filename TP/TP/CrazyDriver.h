@@ -5,10 +5,13 @@
 class CrazyDriver :public Piloto
 {
 	int tempoDesatento;
-	int posicao;
+	int posicao_anterior;
 public:
 	CrazyDriver(string nome, vector<Piloto*> pilotos);
-	int mover(float energia, int capacidadeMax, int posicao, int nCarros) override;
+	int mover(Carro* carro, int posicao, int nCarros, bool finalDaCorrida) override;
+	void reset() override;
+	void resetTempoDesatento();
+	void resetPosicao_anterior();
 };
 
 #endif

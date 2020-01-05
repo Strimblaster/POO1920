@@ -5,12 +5,10 @@
 
 DGV::DGV() {
 	campeonato = nullptr;
-	//carros.push_back(new Carro("Mercedes", "Corno", 6000, 4000, 100));
-	carros.push_back(new Carro("Mercedes", 6000, 4000, 1000));
-	carros.push_back(new Carro("Mercedes", 6000, 4000, 300));
-	carros.push_back(new Carro("Mercedes", 6000, 4000, 500));
+	carros.push_back(new Carro("Mercedes", 6000, 3100, 70));
+	carros.push_back(new Carro("Mercedes", 6000, 3100, 90));
+	carros.push_back(new Carro("Mercedes", 6000, 3100, 120));
 
-	pilotos.push_back(new Piloto("P1", pilotos));
 	pilotos.push_back(new FastDriver("P2", pilotos));
 	pilotos.push_back(new CrazyDriver("P3", pilotos));
 
@@ -57,20 +55,34 @@ void DGV::cria(vector<string> comando) {
 		cout << "Carro criado!" << endl;
 	}
 	else if (comando.at(1) == "p") {
-		if (comando.size() < 4) throw string("Usar: cria p Nome");
+		if (comando.size() < 5) throw string("Usar: cria p tipo Nome");
 		ostringstream oss;
-		for (unsigned int i = 2; i < comando.size()-1; i++)
+		//Para pilotos com mais de um nome
+		for (unsigned int i = 3; i < comando.size()-1; i++)
 		{	
-			if (i > 2)
+			if (i > 3)
 				oss << " ";
 			oss << comando.at(i);
 		}
-		addPiloto(new Piloto(oss.str(), pilotos));
-		cout << "Piloto criado!" << endl;
+		string tipo = comando.at(2);
+		if (tipo != "Crazy" && tipo != "Surpresa" && tipo != "Fast") throw string("Usar: cria p tipo Nome");
+
+		if (tipo == "Crazy")
+			addPiloto(new CrazyDriver(oss.str(), pilotos));
+		if (tipo == "Surpresa")
+			addPiloto(new Surpresa(oss.str(), pilotos));
+		if (tipo == "Fast")
+			addPiloto(new FastDriver(oss.str(), pilotos));
+		cout << "Piloto " << tipo << " criado!" << endl;
 	}
 	else if (comando.at(1) == "a") {
-		if (comando.size() != 6) throw string("Usar: cria a Nome nMaxCarros Comprimento");
-		addAutodromo(comando);
+		if (comando.size() != 6) throw string("Usar: cria a N comprimento nome");
+		try {
+			Autodromo* autodromo = new Autodromo(comando.at(4), stoi(comando.at(2)), stoi(comando.at(3)), autodromos);
+			addAutodromo(autodromo);
+		}catch (invalid_argument ex) {
+			throw string("Usar: cria a N comprimento nome");
+		}
 		cout << "Autodromo criado!" << endl;
 	}
 	else
@@ -152,10 +164,16 @@ void DGV::carregaP(vector<string> comando)
 		}
 		
 		string n = nome.str();
-		if (tipo != "generico" || n.size() == 0) continue;
+		if (n.size() == 0) continue;
+		if (tipo != "Crazy" && tipo != "Surpresa" && tipo != "Fast")continue;
 		n.erase(remove_if(n.end()-1, n.end(), isspace), n.end());
 
-		addPiloto(new Piloto(n, pilotos));
+		if (tipo == "Crazy")
+			addPiloto(new CrazyDriver(n, pilotos));
+		if (tipo == "Surpresa")
+			addPiloto(new Surpresa(n, pilotos));
+		if (tipo == "Fast")
+			addPiloto(new FastDriver(n, pilotos));
 	}
 	f.close();
 
@@ -185,6 +203,74 @@ void DGV::carregaA(vector<string> comando)
 	f.close();
 
 }
+
+void DGV::carregaCarro(vector<string> comando)
+{
+	int n;
+	if (comando.size() != 4)
+		throw string("caregabat letraCarro N");
+	try {
+		n = stoi(comando.at(2));
+	}
+	catch (invalid_argument ex) {
+		throw string("caregabat letraCarro N");
+	}
+
+	for (Carro* carro : carros) {
+		if (carro->getid() == comando.at(1)[0])
+			carro->carrega(n);
+	}
+}
+
+void DGV::carregaTudo() {
+	for (Carro* carro : carros)
+		carro->carregaTudo();
+}
+
+void DGV::destroiCarro(vector<string> comando)
+{
+	if (comando.size() != 3) throw string("destroi letraCarro");
+	char letraCarro = comando.at(1)[0];
+	campeonato->destroiCarro(letraCarro);
+	
+	for (auto i = 0; i < carros.size(); i++) {
+		if (carros.at(i)->getid() == letraCarro) {
+			delete carros.at(i);
+			carros.erase(carros.begin() + i);
+		}
+	}
+}
+
+void DGV::acidente(vector<string> comando)
+{
+	if (comando.size() != 3) throw string("acidente letraCarro");
+	char letraCarro = comando.at(1)[0];
+	campeonato->acidente(letraCarro);
+}
+
+void DGV::stop(vector<string> comando)
+{
+	if (comando.size() < 3) throw string("Usar: stop NomePiloto");
+	ostringstream oss;
+	for (unsigned int i = 1; i < comando.size() - 1; i++)
+	{
+		if (i > 1)
+			oss << " ";
+		oss << comando.at(i);
+	}
+	string nome = oss.str();
+	for (Piloto* piloto : pilotos) {
+		if (piloto->getNome() == nome)
+			piloto->para();
+	}
+}
+
+vector<string> DGV::getLog()
+{
+	return Campeonato::getLog();
+}
+
+
 
 void DGV::carregaC(vector<string> comando)
 {
@@ -252,9 +338,9 @@ void DGV::entraNoCarro(vector<string> comando)
 	throw string("O Carro nao foi encontrado");
 }
 
-void DGV::addAutodromo(vector<string> comando)
+void DGV::addAutodromo(Autodromo* autodromo)
 {
-	autodromos.push_back(new Autodromo(comando.at(2), stoi(comando.at(3)), stoi(comando.at(4)), autodromos));
+	autodromos.push_back(autodromo);
 }
 
 void DGV::addCarro(Carro* c) {

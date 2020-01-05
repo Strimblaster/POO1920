@@ -2,11 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include "Carro.h"
+#include "Piloto.h"
 
 using namespace std;
-
-
-
 
 Carro::Carro(string marca, int capacidadeMax, int energiaInicial, int velocidadeMax, string modelo):capacidadeMax(capacidadeMax), velocidadeMax(velocidadeMax) {
 	if (energiaInicial > capacidadeMax) throw string("A Energia Inicial do carro deve ser inferior à Capacidade Maxima");
@@ -21,33 +19,87 @@ Carro::Carro(string marca, int capacidadeMax, int energiaInicial, int velocidade
 	sinalEmergencia = false;
 	estado = parado;
 }
-
-void Carro::acelerar() {
-	if (estado == danificado || piloto == nullptr) return;
-	if (energia > 0 && velocidade < velocidadeMax) {
-		velocidade++;
-		estado = movimento;
+int Carro::acelerar(int n) {
+	if (estado == danificado || piloto == nullptr) throw string("O carro não tem piloto ou está danificado");
+	if (energia <= 0) {
+		if(velocidade > 0)
+			velocidade--;
+		if (velocidade == 0)
+			estado = parado;
+		return velocidade;
 	}
-}
+	
+	estado = movimento;
+	velocidade += n;
+	if (velocidade > velocidadeMax)
+		velocidade = velocidadeMax;
 
-void Carro::travar() {
-	if (estado == danificado || piloto == nullptr) return;
-	if(velocidade > 0) velocidade--;
-	if (velocidade == 0) estado = parado;
-}
-
-int Carro::mover(int pos, int nCarros) {
-
-	if (energia == 0) travar();
-	try {
-		velocidade += piloto->mover(energia, capacidadeMax, pos, nCarros);
-	}
-	catch (string s) {
-
-	}
-
+	gastaEnergia();
 	return velocidade;
 }
+
+int Carro::travar() {
+	if (estado == danificado || piloto == nullptr) throw string("O carro não tem piloto ou está danificado");
+	if (energia <= 0 && velocidade > 0) 
+		velocidade--;
+	if (velocidade > 0)
+		velocidade--;
+	if (velocidade == 0) estado = parado;
+
+	gastaEnergia();
+	return velocidade;
+}
+
+int Carro::manterVelocidade()
+{
+	if (energia == 0)
+		velocidade--;
+	else
+		gastaEnergia();
+	return velocidade;
+}
+
+void Carro::gastaEnergia()
+{
+	energia = energia - (float)(0.1 * velocidade);
+	if (energia < 0)
+		energia = 0;
+}
+
+void Carro::ativarSinalEmergencia()
+{
+	sinalEmergencia = true;
+}
+
+void Carro::reset()
+{
+	sinalEmergencia = false;
+	if (piloto != nullptr)
+		piloto->reset();
+}
+
+int Carro::getVelocidade()
+{
+	return velocidade;
+}
+
+
+
+float Carro::getEnergia()
+{
+	return energia;
+}
+
+bool Carro::getSinalEmergencia()
+{
+	return sinalEmergencia;
+}
+
+int Carro::getEnergiaMax()
+{
+	return capacidadeMax;
+}
+
 
 void Carro::entrarPiloto(Piloto* p) {
 	if (estado != parado) throw string("Erro: O carro tem que estar parado");
@@ -59,10 +111,38 @@ void Carro::entrarPiloto(Piloto* p) {
 string Carro::toString() {
 	ostringstream o;
 
+	if (piloto != nullptr)
+		o << "ID: " << id << " Piloto: " << piloto->getNome();
+	else {
+		char idlower = tolower(id);
+		o << "ID: " << idlower;
+	}
+	o << " Marca: " << marca << " Modelo: " << modelo << " EnergiaMaxima:" << capacidadeMax << " VelMax:" << velocidadeMax;
+	if (estado == danificado)
+		o << " DANIFICADO";
+	o << endl;
+
+	return o.str();
+}
+
+string Carro::toStringBoard() {
+	ostringstream o;
+
 	o << "ID: " << id;
 	if (piloto != nullptr)
-		o << " Piloto: " << piloto->getNome();
-	o << " Marca: " << marca << " Modelo: " << modelo << " Capacidade Maxima:" << capacidadeMax << endl;
+		o << " Piloto: " << piloto->toString();
+	else {
+		char idlower = tolower(id);
+		o << "ID: " << idlower;
+	}
+	o << " Estado: ";
+	if (estado == parado)
+		o << "parado";
+	else if (estado == movimento)
+		o << "movimento";
+	else if (estado == danificado)
+		o << "danificado";
+	o << " Energia:" << energia << " Velocidade:" << velocidade << " VelMax:" << velocidadeMax  << endl;
 
 	return o.str();
 }
@@ -74,9 +154,6 @@ void Carro::sairPiloto()
 		throw string("O carro esta em movimento");
 	piloto = nullptr;
 }
-
-
-
 
 const char Carro::getid()
 {
@@ -94,5 +171,29 @@ void Carro::setVel(int v) {
 	if (v == 0) estado = parado;
 	else estado = movimento;
 }
+
+void Carro::carrega(int n)
+{
+	if (estado == danificado) throw string("O carro está danificado!");
+	if (estado == movimento) throw string("O carro não está parado!");
+	energia += n;
+	if (energia > capacidadeMax)
+		energia = (float)capacidadeMax;
+}
+
+void Carro::carregaTudo() {
+	if (estado == danificado) return;
+	if (estado == movimento) return;
+	energia = (float)capacidadeMax;
+}
+
+void Carro::danificar()
+{
+	estado = danificado;
+	velocidade = 0;
+	piloto = nullptr;
+}
+
+
 
 

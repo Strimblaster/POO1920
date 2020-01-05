@@ -1,11 +1,13 @@
 #include "Via.h"
+#include "Piloto.h"
 
-Via::Via(Carro* carro, int pista)
+Via::Via(Carro* carro, int pista, int comprimento)
 {
 	this->carro = carro;
 	this->posicao = 0;
 	this->pista = pista;
 	this->tempo = 0;
+	this->comprimento = comprimento;
 }
 
 Carro* Via::getCarro()
@@ -30,9 +32,12 @@ int Via::getTempo()
 
 void Via::mover(int comp, int pos, int nCarros)
 {
-	posicao += carro->mover(pos, nCarros);
-	if (posicao > comp)
-		posicao = comp;
+	Piloto* piloto = carro->getPiloto();
+	bool finalDacorrida = posicao / (float)comprimento > 0.75;
+	posicao += piloto->mover(carro, pos, nCarros, finalDacorrida);
+	if (posicao >= comprimento) {
+		posicao = comprimento;
+	}
 	tempo++;
 }
 

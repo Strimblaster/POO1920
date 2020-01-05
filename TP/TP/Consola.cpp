@@ -15,8 +15,8 @@ void Consola::start() {
 	while (nextCommand());
 }
 
-void Consola::desenharPista(int comprimento, int largura) {
-	comprimento = comprimento / 10;
+void Consola::desenharPista(int comprimentoMax, int largura) {
+	int comprimento = 100;
 	int xlinha1 = 7;
 	int xlinha2 = xlinha1 + (comprimento * 10);
 	int ylinha1 = 4;
@@ -57,7 +57,7 @@ void Consola::desenharPista(int comprimento, int largura) {
 	vector<Via*> posicoes = dgv->getPosicoes();
 	int k = 0;
 	for (Via* p : posicoes) {
-		ConsolaUtils::gotoxy(xlinha1 -1 + p->getPosicao()/10, ylinha1 + 1 + k);
+		ConsolaUtils::gotoxy(xlinha1 -1 + (p->getPosicao() * comprimento)/comprimentoMax, ylinha1 + 1 + k);
 		cout << p->getCarro()->getid();
 		k++;
 	}
@@ -176,11 +176,35 @@ bool Consola::nextCommand() {
 						cout << endl << "Prima qualquer tecla para continuar" << endl;
 						ConsolaUtils::getch();
 					}
+					else if (comando.at(0) == "carregabat") {
+						dgv->carregaCarro(comando);
+					}
+					else if (comando.at(0) == "carregatudo") {
+						dgv->carregaTudo();
+					}
+					else if (comando.at(0) == "destroi") {
+						dgv->destroiCarro(comando);
+					}
+					else if (comando.at(0) == "acidente") {
+						dgv->acidente(comando);
+					}
+					else if (comando.at(0) == "stop") {
+						dgv->stop(comando);
+					}
+					else if (comando.at(0) == "log") {
+						ConsolaUtils::clrscr();
+						for (string s : dgv->getLog()) {
+							cout << s;
+						}
+						cout << endl << endl << "Clique numa tecla para voltar";
+						ConsolaUtils::getch();
+					}
 					else if (comando.at(0) == "help")
 						cout << "Lista de comandos - Modo 2:\ncorrida\ninfocampeonato\nscoreboard\npassatempo\nlistacarros\n";
 					else
 						cout << "Comando nao encontrado" << endl;
-					if (dgv->corridaADecorrer())desenharPista(dgv->getComprimento(), dgv->getLargura());
+					if (dgv->corridaADecorrer())
+						desenharPista(dgv->getComprimento(), dgv->getLargura());
 				}
 				catch (string ex) {
 					cout << ex << endl << "Prima qualquer tecla para continuar" << endl;
@@ -206,8 +230,8 @@ bool Consola::passatempo(vector<string> comando)
 	catch(exception e){
 		throw string("Usar: passatempo seg");
 	}
-
 	if(seg <= 0) throw string("Usar: passatempo seg");
+	if (!dgv->corridaADecorrer()) throw string("Nenhuma corrida a decorrer");
 	for (int i = 0; i < seg; i++) {
 		desenharPista(dgv->getComprimento(), dgv->getLargura());
 		cout << "Clique numa tecla para continuar\n";
@@ -218,3 +242,4 @@ bool Consola::passatempo(vector<string> comando)
 	desenharPista(dgv->getComprimento(), dgv->getLargura());
 	return false;
 }
+

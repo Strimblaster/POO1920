@@ -4,9 +4,12 @@
 #ifndef Campeonato_H
 #define Campeonato_H
 
+
+
 using namespace std;
 class Campeonato
 {
+	static vector<string> log;
 	vector<Autodromo*>* pistas;
 	map<Piloto*, int> pontuacao;
 	vector<Carro*> carros;
@@ -29,7 +32,10 @@ public:
 	bool passaTempo();
 	bool partidaADecorrer();
 	string listaCarros();
+	void destroiCarro(char);
+	void acidente(char);
+	static void addLog(string);
+	static vector<string> getLog();
 };
-
 
 #endif

@@ -1,4 +1,5 @@
 #include "Autodromo.h"
+#include "Piloto.h"
 #include <algorithm>
 
 
@@ -47,10 +48,10 @@ void Autodromo::autodromoController(Carro* carro)
 	
 	//Se o carro estiver na garagem, mete na pista
 	if (!(carro->estado == Carro::danificado || carro->getPiloto() == nullptr))
-		for (unsigned int i = 0; i < garagem.size(); i++)
+		for (auto i = 0; i < garagem.size(); i++)
 			if (carro == garagem.at(i)) {
 				//Falta verificar se tem espaço na pista
-				pista.push_back(new Via(carro, pista.size()));
+				pista.push_back(new Via(carro, static_cast<int>(pista.size()), comprimento));
 				garagem.erase(garagem.begin()+i);
 				return;
 			}
@@ -66,8 +67,8 @@ void Autodromo::autodromoController(Carro* carro)
 	//Adiciona o carro na pista se couber (se não na garagem)
 	if(carro->estado == Carro::danificado || carro->getPiloto() == nullptr)
 		garagem.push_back(carro);
-	if (pista.size() < (unsigned)largura)
-		pista.push_back(new Via(carro, pista.size()));
+	else if (pista.size() < static_cast<int>(largura))
+		pista.push_back(new Via(carro, static_cast<int>(pista.size()), comprimento));
 	else
 		garagem.push_back(carro);
 
@@ -76,8 +77,13 @@ void Autodromo::autodromoController(Carro* carro)
 string Autodromo::getGaragem()
 {
 	ostringstream oss;
-	for (Carro* c : garagem)
-		oss << c->getid() << " ";
+	for (Carro* c : garagem){
+		if (c->getPiloto() == nullptr)
+			oss << (char)tolower(c->getid());
+		else
+			oss << c->getid();
+		oss << " ";
+	}
 	return oss.str();
 }
 
@@ -99,9 +105,17 @@ vector<Via*> Autodromo::getPosicoes()
 bool Autodromo::passaTempo()
 {
 	sortVias();
-	for (unsigned int i = 0; i < pista.size(); i++)
+	for (auto i = 0; i < pista.size(); i++) {
 		if (pista.at(i)->getPosicao() < comprimento)
-			pista.at(i)->mover(comprimento, i+1, pista.size());
+			pista.at(i)->mover(comprimento, i + 1, static_cast<int>(pista.size()));
+		if (pista.at(i)->getCarro()->getSinalEmergencia() || pista.at(i)->getCarro()->estado == Carro::Estado::danificado)
+			autodromoController(pista.at(i)->getCarro());
+		else if(pista.at(i)->getCarro()->getPiloto() != nullptr)
+			if(pista.at(i)->getCarro()->getPiloto()->getParar() && pista.at(i)->getCarro()->getVelocidade() == 0)
+				autodromoController(pista.at(i)->getCarro());
+
+
+	}
 
 	if (gameEnded()) return true;
 	return false;
@@ -131,7 +145,7 @@ string Autodromo::listaCarros() {
 	sortVias();
 	int i = 1;
 	for (auto it = pista.begin(); it != pista.end(); it++) {
-		oss << i << " - " << (*it)->getPosicao() << "m : " << (*it)->getCarro()->getid() << " Piloto: " << (*it)->getCarro()->getPiloto()->toString() << endl;
+		oss << i << " - " << (*it)->getPosicao() << "m : " << (*it)->getCarro()->toStringBoard() << endl;
 		i++;
 	}
 
@@ -150,5 +164,14 @@ bool comparador(Via* i, Via* j) {
 void Autodromo::sortVias() {
 	
 	sort(pista.begin(), pista.end(), comparador);
+}
+
+void Autodromo::destroiCarro(char letraCarro)
+{
+	for (auto i = 0; i < pista.size(); i++) {
+		if (pista.at(i)->getCarro()->getid() == letraCarro) {
+			pista.erase(pista.begin() + i);
+		}
+	}
 }
 

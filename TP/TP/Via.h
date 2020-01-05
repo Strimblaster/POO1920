@@ -8,9 +8,10 @@ class Via
 	int posicao;
 	int pista;
 	int tempo;
+	int comprimento;
 
 public:
-	Via(Carro* carro, int pista);
+	Via(Carro* carro, int pista, int comprimento);
 
 	Carro* getCarro();
 	int getPosicao();

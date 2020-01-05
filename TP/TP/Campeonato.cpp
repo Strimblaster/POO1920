@@ -1,3 +1,4 @@
+#include "Piloto.h"
 #include "Campeonato.h"
 
 Campeonato::Campeonato(vector<Autodromo*> pistas, vector<Piloto*> pilotos, vector<Carro*> carros) {
@@ -20,8 +21,10 @@ Campeonato::Campeonato(vector<Autodromo*> pistas, vector<Piloto*> pilotos, vecto
 	corridaAtual = -1;
 	corridaAnterior = -1;
 	//Mete os carros no Autodromo da primeira corrida
-	for (Carro* c : this->carros)
+	for (Carro* c : this->carros) {
 		this->pistas->at(0)->autodromoController(c);
+		c->reset();
+	}
 }
 
 Campeonato::~Campeonato() {
@@ -67,12 +70,15 @@ void Campeonato::moveCarros(Autodromo* anterior, Autodromo* atual)
 	for (Via* p : anterior->getPosicoes())
 	{
 		atual->autodromoController(p->getCarro());
+		p->getCarro()->reset();
 	}
 
-	for (Carro* c : atual->getGaragem(0))
+	for (Carro* carro : anterior->getGaragem(0))
 	{
-		atual->autodromoController(c);
+		atual->autodromoController(carro);
+		carro->reset();
 	}
+
 }
 
 
@@ -147,3 +153,44 @@ string Campeonato::listaCarros()
 	if (corridaAnterior != -1) return pistas->at(corridaAnterior)->listaCarros();
 	throw string("Nenhuma corrida inciada.");
 }
+
+void Campeonato::destroiCarro(char letraCarro)
+{
+	for(Autodromo* autodromo: *pistas)
+	{
+		autodromo->destroiCarro(letraCarro);
+	}
+	for (auto i = 0; i < carros.size(); i++) {
+		if (carros.at(i)->getid() == letraCarro)
+			carros.erase(carros.begin() + i);
+	}
+}
+
+void Campeonato::acidente(char letraCarro)
+{
+	Carro* c = nullptr;
+	for (Carro* carro : carros) {
+		if (carro->getid() == letraCarro) {
+			carro->danificar();
+			c = carro;
+		}
+	}
+	if (c == nullptr)
+		return;
+	if (corridaAtual != -1)
+		pistas->at(corridaAtual)->autodromoController(c);
+
+}
+
+vector<string> Campeonato::log;
+
+void Campeonato::addLog(string s)
+{
+	log.push_back(s);
+}
+
+vector<string> Campeonato::getLog()
+{
+	return Campeonato::log;
+}
+

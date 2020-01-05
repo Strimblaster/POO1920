@@ -1,25 +1,30 @@
-#include "Carro.h"
 #ifndef Piloto_H
 #define Piloto_H
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 
 using namespace std;
+
+class Carro;
 class Piloto
 {
 	string nome;
-
-protected:
 	string tipo;
+	bool parar;
 
 public:
-	Piloto(string, vector<Piloto*>);
+	Piloto(string, vector<Piloto*>, string);
 
-	string getNome() const;
-	string toString();
-	virtual int mover(float energia, int capacidadeMax, int posicao, int nCarros);
+	virtual void reset();
+	string getNome();
+	string getTipo();
+	bool getParar();
+	void para();
+	virtual string toString();
+	virtual int mover(Carro* carro, int posicao, int nCarros, bool finalDaCorrida);
 };
 
 #endif

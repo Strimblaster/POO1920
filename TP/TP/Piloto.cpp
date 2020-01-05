@@ -1,7 +1,8 @@
 #include "Piloto.h"
 #include <sstream>
+#include "Carro.h"
 
-Piloto::Piloto(string nome, vector<Piloto*> pilotos)
+Piloto::Piloto(string nome, vector<Piloto*> pilotos, string tipo)
 {
 	for (unsigned int i = 0; i < pilotos.size(); i++)
 		if (pilotos.at(i)->getNome() == nome) {
@@ -10,23 +11,43 @@ Piloto::Piloto(string nome, vector<Piloto*> pilotos)
 		}
 
 	this->nome = nome;
-	this->tipo = "Generico";
+	this->tipo = tipo;
+	parar = false;
 }
 
-string Piloto::getNome() const {
+void Piloto::reset()
+{
+	parar = false;
+}
+
+string Piloto::getNome() {
 	return nome;
+}
+
+string Piloto::getTipo()
+{
+	return tipo;
+}
+
+bool Piloto::getParar()
+{
+	return parar;
+}
+
+void Piloto::para()
+{
+	parar = true;
 }
 
 string Piloto::toString()
 {
 	ostringstream oss;
-	oss << tipo << " " << nome;
+	oss << tipo << " " << nome << " " << tipo;
 	return oss.str();
 }
 
-int Piloto::mover(float energia, int capacidadeMax, int posicao, int nCarros)
+int Piloto::mover(Carro* carro, int posicao, int nCarros, bool finalDaCorrida)
 {
-	if (energia == 0) return 0;
 	return 1;
 }
 

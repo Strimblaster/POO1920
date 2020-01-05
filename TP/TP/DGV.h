@@ -8,6 +8,7 @@
 #include "Campeonato.h"
 #include "CrazyDriver.h"
 #include "FastDriver.h"
+#include "Surpresa.h"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ class DGV
 
 	void addPiloto(Piloto*);
 	void addCarro(Carro*);
-	void addAutodromo(vector<string> comando);
+	void addAutodromo(Autodromo*);
 	string listaPilotos();
 	string listaCarros();
 	string listaAutodromos();
@@ -47,6 +48,13 @@ public:
 	void carregaP(vector<string>);
 	void carregaC(vector<string>);
 	void carregaA(vector<string>);
+	void carregaCarro(vector<string>);
+	void carregaTudo();
+	void destroiCarro(vector<string>);
+	void acidente(vector<string>);
+	void stop(vector<string>);
+	vector<string> getLog();
+
 
 
 };

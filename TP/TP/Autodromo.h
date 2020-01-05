@@ -31,6 +31,7 @@ public:
 	vector<Carro*> getGaragem(int i);
 	void clear();
 	void sortVias();
+	void destroiCarro(char);
 
 };
 #endif
