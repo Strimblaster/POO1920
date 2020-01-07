@@ -233,7 +233,7 @@ void DGV::destroiCarro(vector<string> comando)
 	char letraCarro = comando.at(1)[0];
 	campeonato->destroiCarro(letraCarro);
 	
-	for (auto i = 0; i < carros.size(); i++) {
+	for (auto i = 0; (unsigned int)i < carros.size(); i++) {
 		if (carros.at(i)->getid() == letraCarro) {
 			delete carros.at(i);
 			carros.erase(carros.begin() + i);

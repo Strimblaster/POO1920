@@ -160,7 +160,7 @@ void Campeonato::destroiCarro(char letraCarro)
 	{
 		autodromo->destroiCarro(letraCarro);
 	}
-	for (auto i = 0; i < carros.size(); i++) {
+	for (auto i = 0; (unsigned int)i < carros.size(); i++) {
 		if (carros.at(i)->getid() == letraCarro)
 			carros.erase(carros.begin() + i);
 	}

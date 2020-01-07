@@ -48,7 +48,7 @@ void Autodromo::autodromoController(Carro* carro)
 	
 	//Se o carro estiver na garagem, mete na pista
 	if (!(carro->estado == Carro::danificado || carro->getPiloto() == nullptr))
-		for (auto i = 0; i < garagem.size(); i++)
+		for (auto i = 0;(unsigned int) i < garagem.size(); i++)
 			if (carro == garagem.at(i)) {
 				//Falta verificar se tem espaço na pista
 				pista.push_back(new Via(carro, static_cast<int>(pista.size()), comprimento));
@@ -67,7 +67,7 @@ void Autodromo::autodromoController(Carro* carro)
 	//Adiciona o carro na pista se couber (se não na garagem)
 	if(carro->estado == Carro::danificado || carro->getPiloto() == nullptr)
 		garagem.push_back(carro);
-	else if (pista.size() < static_cast<int>(largura))
+	else if (pista.size() < (unsigned int)(largura))
 		pista.push_back(new Via(carro, static_cast<int>(pista.size()), comprimento));
 	else
 		garagem.push_back(carro);
@@ -105,7 +105,7 @@ vector<Via*> Autodromo::getPosicoes()
 bool Autodromo::passaTempo()
 {
 	sortVias();
-	for (auto i = 0; i < pista.size(); i++) {
+	for (auto i = 0; (unsigned int)i < pista.size(); i++) {
 		if (pista.at(i)->getPosicao() < comprimento)
 			pista.at(i)->mover(comprimento, i + 1, static_cast<int>(pista.size()));
 		if (pista.at(i)->getCarro()->getSinalEmergencia() || pista.at(i)->getCarro()->estado == Carro::Estado::danificado)
@@ -168,7 +168,7 @@ void Autodromo::sortVias() {
 
 void Autodromo::destroiCarro(char letraCarro)
 {
-	for (auto i = 0; i < pista.size(); i++) {
+	for (auto i = 0; (unsigned int)i < pista.size(); i++) {
 		if (pista.at(i)->getCarro()->getid() == letraCarro) {
 			pista.erase(pista.begin() + i);
 		}
